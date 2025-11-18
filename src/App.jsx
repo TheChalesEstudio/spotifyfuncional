@@ -6,67 +6,77 @@ function App() {
   const [progress, setProgress] = useState(0)
   const audioRef = useRef(null)
 
-  // Música cristiana y de piano - URLs reales de audio
+  // Música cristiana real - URLs funcionales
   const musicLibrary = [
     {
       id: 1,
-      title: "Alabanza de Paz",
-      artist: "Música Cristiana Relajante",
+      title: "Piano Cristiano Relajante",
+      artist: "Música para Orar",
       image: "https://images.unsplash.com/photo-1511376961623-97e78789e81c?w=400&h=400&fit=crop",
-      audio: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
-      duration: "3:45"
+      audio: "https://assets.mixkit.co/music/preview/mixkit-pray-132.mp3",
+      duration: "2:15"
     },
     {
       id: 2,
-      title: "Piano en la Montaña",
-      artist: "Instrumental Cristiano",
-      image: "https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=400&h=400&fit=crop",
-      audio: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
-      duration: "4:20"
+      title: "Alabanza Suave",
+      artist: "Adoración Instrumental",
+      image: "https://images.unsplash.com/photo-1511379938547-1c1f69419868?w=400&h=400&fit=crop",
+      audio: "https://assets.mixkit.co/music/preview/mixkit-spiritual-choir-03-114.mp3",
+      duration: "1:54"
     },
     {
       id: 3,
-      title: "Canto de Alabanza",
-      artist: "Coros Celestiales",
+      title: "Coro Celestial",
+      artist: "Voces Angelicales",
       image: "https://images.unsplash.com/photo-1507838153414-b4b713384a76?w=400&h=400&fit=crop",
-      audio: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
-      duration: "5:15"
+      audio: "https://assets.mixkit.co/music/preview/mixkit-choir-02-115.mp3",
+      duration: "2:17"
     },
     {
       id: 4,
-      title: "Meditación con Piano",
-      artist: "Música para Orar",
+      title: "Meditación Cristiana",
+      artist: "Piano de Paz",
       image: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&h=400&fit=crop",
-      audio: "https://archive.org/download/musica-cristiana-piano/audio.mp3",
-      duration: "6:30"
+      audio: "https://assets.mixkit.co/music/preview/mixkit-serene-view-443.mp3",
+      duration: "2:30"
     },
     {
       id: 5,
-      title: "Himnos de Fe",
-      artist: "Alabanza Tradicional",
+      title: "Himno Tradicional",
+      artist: "Órgano Clásico",
       image: "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400&h=400&fit=crop",
-      audio: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
-      duration: "4:05"
+      audio: "https://assets.mixkit.co/music/preview/mixkit-church-organ-115.mp3",
+      duration: "2:05"
     },
     {
       id: 6,
-      title: "Piano en el Atardecer",
-      artist: "Momentos de Paz",
+      title: "Alabanza Contemporánea",
+      artist: "Adoración Moderna",
       image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=400&fit=crop",
-      audio: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
-      duration: "3:55"
+      audio: "https://assets.mixkit.co/music/preview/mixkit-choir-03-116.mp3",
+      duration: "1:48"
+    },
+    {
+      id: 7,
+      title: "Piano de Adoración",
+      artist: "Momentos con Dios",
+      image: "https://images.unsplash.com/photo-1571974599782-87624638275f?w=400&h=400&fit=crop",
+      audio: "https://assets.mixkit.co/music/preview/mixkit-piano-01-443.mp3",
+      duration: "2:22"
+    },
+    {
+      id: 8,
+      title: "Cántico Espiritual",
+      artist: "Voces de Fe",
+      image: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&h=400&fit=crop",
+      audio: "https://assets.mixkit.co/music/preview/mixkit-choir-04-117.mp3",
+      duration: "2:10"
     }
   ]
 
   const playTrack = (index) => {
     setCurrentTrack(index)
     setIsPlaying(true)
-    // En un proyecto real, aquí cargarías el audio real
-    setTimeout(() => {
-      if (audioRef.current) {
-        audioRef.current.play()
-      }
-    }, 100)
   }
 
   const togglePlay = () => {
@@ -75,34 +85,64 @@ function App() {
       if (isPlaying) {
         audioRef.current.pause()
       } else {
-        audioRef.current.play()
+        audioRef.current.play().catch(error => {
+          console.log("Error al reproducir:", error)
+        })
       }
     }
   }
 
   const nextTrack = () => {
-    setCurrentTrack((prev) => (prev + 1) % musicLibrary.length)
+    const nextIndex = (currentTrack + 1) % musicLibrary.length
+    setCurrentTrack(nextIndex)
     setIsPlaying(true)
   }
 
   const prevTrack = () => {
-    setCurrentTrack((prev) => (prev - 1 + musicLibrary.length) % musicLibrary.length)
+    const prevIndex = (currentTrack - 1 + musicLibrary.length) % musicLibrary.length
+    setCurrentTrack(prevIndex)
     setIsPlaying(true)
   }
 
   useEffect(() => {
     const audio = audioRef.current
     if (audio) {
+      if (isPlaying) {
+        audio.play().catch(error => {
+          console.log("Error al reproducir automáticamente:", error)
+          setIsPlaying(false)
+        })
+      } else {
+        audio.pause()
+      }
+    }
+  }, [currentTrack, isPlaying])
+
+  useEffect(() => {
+    const audio = audioRef.current
+    if (audio) {
       const updateProgress = () => {
-        setProgress((audio.currentTime / audio.duration) * 100 || 0)
+        if (audio.duration) {
+          setProgress((audio.currentTime / audio.duration) * 100)
+        }
+      }
+      
+      const handleEnded = () => {
+        nextTrack()
       }
       
       audio.addEventListener('timeupdate', updateProgress)
-      return () => audio.removeEventListener('timeupdate', updateProgress)
+      audio.addEventListener('ended', handleEnded)
+      
+      return () => {
+        audio.removeEventListener('timeupdate', updateProgress)
+        audio.removeEventListener('ended', handleEnded)
+      }
     }
   }, [])
 
   const formatTime = (seconds) => {
+    if (isNaN(seconds)) return "0:00"
     const mins = Math.floor(seconds / 60)
     const secs = Math.floor(seconds % 60)
     return `${mins}:${secs.toString().padStart(2, '0')}`
@@ -110,11 +150,11 @@ function App() {
 
   return (
     <div className="spotify-app">
-      {/* Audio Element - Oculto pero funcional */}
+      {/* Audio Element */}
       <audio
         ref={audioRef}
         src={musicLibrary[currentTrack]?.audio}
-        onEnded={nextTrack}
+        preload="metadata"
       />
       
       {/* Sidebar */}
@@ -173,21 +213,42 @@ function App() {
           <p className="hero-description">
             Una colección de música cristiana relajante y alabanzas para tu momento de paz y conexión espiritual. Perfecta para meditar, orar y encontrar tranquilidad.
           </p>
+          <div className="hero-stats">
+            <span>8 canciones • Música para el alma</span>
+          </div>
+        </div>
+
+        {/* Play Controls */}
+        <div className="play-controls">
+          <button className="play-large" onClick={togglePlay}>
+            <i className={isPlaying ? "fas fa-pause" : "fas fa-play"}></i>
+          </button>
+          <button className="shuffle-button">
+            <i className="fas fa-random"></i>
+          </button>
         </div>
 
         {/* Music Grid */}
         <div className="music-grid">
           {musicLibrary.map((song, index) => (
-            <div key={song.id} className="music-card" onClick={() => playTrack(index)}>
+            <div 
+              key={song.id} 
+              className={`music-card ${currentTrack === index ? 'active' : ''}`} 
+              onClick={() => playTrack(index)}
+            >
               <div 
                 className="card-image"
-                style={{ backgroundImage: `url(${song.image})`, backgroundSize: 'cover' }}
-              ></div>
-              <div className="card-title">{song.title}</div>
-              <div className="card-description">{song.artist}</div>
-              <button className="play-button">
-                <i className="fas fa-play"></i>
-              </button>
+                style={{ backgroundImage: `url(${song.image})` }}
+              >
+                <div className="card-overlay">
+                  <i className={`fas ${currentTrack === index && isPlaying ? 'fa-pause' : 'fa-play'}`}></i>
+                </div>
+              </div>
+              <div className="card-content">
+                <div className="card-title">{song.title}</div>
+                <div className="card-artist">{song.artist}</div>
+                <div className="card-duration">{song.duration}</div>
+              </div>
             </div>
           ))}
         </div>
@@ -198,10 +259,7 @@ function App() {
         <div className="now-playing">
           <div 
             className="track-image"
-            style={{ 
-              backgroundImage: `url(${musicLibrary[currentTrack]?.image})`,
-              backgroundSize: 'cover'
-            }}
+            style={{ backgroundImage: `url(${musicLibrary[currentTrack]?.image})` }}
           ></div>
           <div className="track-info">
             <div className="track-name">{musicLibrary[currentTrack]?.title}</div>
@@ -226,14 +284,29 @@ function App() {
           </div>
           
           <div className="progress-bar">
-            <span className="time">0:00</span>
-            <div className="progress-track">
+            <span className="time">
+              {audioRef.current ? formatTime(audioRef.current.currentTime) : "0:00"}
+            </span>
+            <div 
+              className="progress-track"
+              onClick={(e) => {
+                if (audioRef.current) {
+                  const rect = e.currentTarget.getBoundingClientRect()
+                  const percent = (e.clientX - rect.left) / rect.width
+                  audioRef.current.currentTime = percent * audioRef.current.duration
+                }
+              }}
+            >
               <div 
                 className="progress-fill" 
                 style={{ width: `${progress}%` }}
               ></div>
             </div>
-            <span className="time">{musicLibrary[currentTrack]?.duration}</span>
+            <span className="time">
+              {audioRef.current && !isNaN(audioRef.current.duration) 
+                ? formatTime(audioRef.current.duration) 
+                : musicLibrary[currentTrack]?.duration}
+            </span>
           </div>
         </div>
 
