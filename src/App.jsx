@@ -37,7 +37,7 @@ function App() {
       title: "Meditación con Piano",
       artist: "Música para Orar",
       image: "https://images.unsplash.com/photo-1459749411175-04bf5292ceea?w=400&h=400&fit=crop",
-      audio: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav",
+      audio: "https://archive.org/download/musica-cristiana-piano/audio.mp3",
       duration: "6:30"
     },
     {
